@@ -26,11 +26,11 @@ The first time you clone the repository, you need to sync the `cnn/` submodule.
 
 As a preprocessing step, first convert your data in CoNLL 2009 format (https://ufal.mff.cuni.cz/conll2009-st/task-description.html) into transitions, in the format usable by the joint parser.
 
-    java -jar jointOracle.jar -inp train.conll > train.transitions
+    java -jar jointOracle.jar -inp train.conll -pb train.propbank > train.transitions
     java -jar jointOracle.jar -inp dev.conll > dev.transitions
 
 The joint parser can now run on this transition-based data
-    parser/lstm-parse -T train.transitions -d dev.transitions -w sskip.100.vectors -t -outmod joint.model
+    parser/lstm-parse -T train.transitions -d dev.transitions -w sskip.100.vectors --propbank_lemmas train.propbank -g dev.conll -e eval09.pl --out_model joint.model -t
     
 Link to the word vectors that we used in the ACL 2015 paper for English:  [sskip.100.vectors](https://drive.google.com/file/d/0B8nESzOdPhLsdWF2S1Ayb1RkTXc/view?usp=sharing).
 The model is written to the current directory.
@@ -43,11 +43,11 @@ Note-2: the training process should be stopped when the development result does 
 
 Having a test.conll file formatted according to the [CoNLL data format](http://ilk.uvt.nl/conll/#dataformat)
 
-    java -jar ParserOracleArcStdWithSwap.jar -t -1 -l 1 -c test.conll > testOracle.txt
+    java -jar jointOracle.jar -inp test.conll > test.transitions
 
-    parser/lstm-parse -T train.transitions -d test.transitions -w sskip.100.vectors -m joint.model
+    parser/lstm-parse -T train.transitions -d test.transitions -w sskip.100.vectors -pb train.propbank -m joint.model -s test.predictions.conll
 
-The parser will output the conll file with the parsing result.
+The parser will output a file in CoNLL 2009 format(test.predictions.conll) with predicted syntax and SRL dependencies.
 
 #### Contact
 
