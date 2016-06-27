@@ -91,7 +91,7 @@ void init_command_line(int argc, char** argv, po::variables_map* conf) {
             po::value<unsigned>()->default_value(2), "number of LSTM layers")(
             "action_dim", po::value<unsigned>()->default_value(100),
             "action embedding size")("input_dim",
-            po::value<unsigned>()->default_value(100), "input embedding size")(
+            po::value<unsigned>()->default_value(32), "input embedding size")(
             "hidden_dim", po::value<unsigned>()->default_value(100),
             "hidden dimension")("pretrained_dim",
             po::value<unsigned>()->default_value(100), "pretrained input dim")(
@@ -102,7 +102,7 @@ void init_command_line(int argc, char** argv, po::variables_map* conf) {
             "predicate dimension")("propbank_lemmas", po::value<string>(),
             "lemmas mapped to senses in propbank")("lstm_input_dim",
             po::value<unsigned>()->default_value(100), "LSTM input dimension")(
-            "dropout", po::value<float>()->default_value(0.22f), "Dropout rate")(
+            "dropout", po::value<float>()->default_value(0.2f), "Dropout rate")(
             "train,t", "Should training be run?")("words,w",
             po::value<string>(), "pretrained word embeddings")("use_spelling,S",
             "Use spelling model")("gold_conll,g", po::value<string>(),
