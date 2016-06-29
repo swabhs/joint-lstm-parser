@@ -3,13 +3,19 @@ package edu.cmu.cs.lti.oracles.jointsynsem;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
+import edu.cmu.cs.lti.nlp.swabha.fileutils.BasicFileWriter;
 import edu.cmu.cs.lti.oracles.datastructs.Conll;
+import edu.cmu.cs.lti.oracles.datastructs.ConllElement;
 import edu.cmu.cs.lti.oracles.datastructs.ConllFileIO;
 import edu.cmu.cs.lti.oracles.datastructs.SemHead;
 import edu.cmu.cs.lti.oracles.datastructs.SynSemAnalysis;
@@ -21,6 +27,9 @@ public class OracleRunner {
 
     @Parameter(names = "-print", description = "print parser states and transition types", arity = 1)
     public static boolean printStates = true;
+
+    @Parameter(names = "-lemmas", description = "print propbank lemmas", arity = 1)
+    public static boolean printLemmas = false;
 
     @Parameter(names = "-conll08", description = "print all lemmas", arity = 1)
     public static boolean conll08 = false;
@@ -48,11 +57,44 @@ public class OracleRunner {
         }
     }
 
+    public static void printLemmaFile(ImmutableList<Conll> conlls) {
+        String pbLemmasFile = input + ".pb.lemmas";
+
+        Map<String, Set<String>> lemmaPrActs = Maps.newHashMap();
+        for (Conll conll : conlls) {
+            for (ConllElement ele : conll.elements) {
+                if (ele.isPred) {
+                    Set<String> prActs;
+                    if (lemmaPrActs.containsKey(ele.predictedLemma) == false) {
+                        prActs = Sets.newTreeSet();
+                    } else {
+                        prActs = lemmaPrActs.get(ele.predictedLemma);
+                    }
+                    prActs.add(ele.pred);
+                    lemmaPrActs.put(ele.predictedLemma, prActs);
+                }
+            }
+        }
+        List<String> lines = Lists.newArrayList();
+        for (String lemma : lemmaPrActs.keySet()) {
+            String line = lemma + "\t";
+            for (String prAct : lemmaPrActs.get(lemma)) {
+                line += "PR(" + prAct + ")\t";
+            }
+            lines.add(line);
+        }
+        BasicFileWriter.writeStrings(lines, pbLemmasFile);
+    }
+
     public static void main(String[] args) {
         new JCommander(new OracleRunner(), args);
 
         ConllFileIO reader = new ConllFileIO();
         ImmutableList<Conll> conlls = reader.readConllFile(input, conll08);
+
+        if (printLemmas) {
+            printLemmaFile(conlls);
+        }
 
         List<SynSemAnalysis> goldAnalyses = Lists.newArrayList();
 
@@ -89,4 +131,5 @@ public class OracleRunner {
                 + formatter.format(numMistakes * 100.0 / conlls.size()) + "%");
         System.err.println("% self arcs = " + formatter.format(numSelfArcs * 100.0 / numTotalArcs));
     }
+
 }
