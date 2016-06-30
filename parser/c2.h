@@ -20,6 +20,7 @@ namespace cpyp {
 class Corpus {
 public:
     bool USE_SPELLING = false;
+    bool USE_LOWERWV = false;
     // String literals
     static constexpr const char* UNK = "UNK";
     static constexpr const char* BAD0 = "<BAD0>";
@@ -163,6 +164,9 @@ public:
 
                     // Token
                     token = tok_pos_pair.substr(0, postag_char_idx);
+                    if (USE_LOWERWV) {
+                        transform(token.begin(), token.end(), token.begin(), ::tolower);
+                    }
                     if (!tok_dict.Contains(token)) {
                         // character stuff // TODO(Swabha): look into later
                         unsigned j = 0;
@@ -322,6 +326,9 @@ public:
 
                     // Token
                     token = tok_pos_pair.substr(0, postag_charpos);
+                    if (USE_LOWERWV) {
+                        transform(token.begin(), token.end(), token.begin(), ::tolower);
+                    }
                     unsigned tok_id = tok_dict.Convert(token);
                     token_vocab_size = tok_dict.size();
                     ++num_tokens;

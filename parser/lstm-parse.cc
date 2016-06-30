@@ -104,7 +104,8 @@ void init_command_line(int argc, char** argv, po::variables_map* conf) {
             po::value<unsigned>()->default_value(100), "LSTM input dimension")(
             "dropout", po::value<float>()->default_value(0.2f), "Dropout rate")(
             "train,t", "Should training be run?")("words,w",
-            po::value<string>(), "pretrained word embeddings")("use_spelling,S",
+            po::value<string>(), "pretrained word embeddings")("use_lowerwv",
+            "Lowercase tokens for wv compatibility")("use_spelling,S",
             "Use spelling model")("gold_conll,g", po::value<string>(),
             "Gold dev/test conll file for eval")("output_conll,s",
             po::value<string>(), "Predicted dev/test conll file for eval")(
@@ -1458,7 +1459,9 @@ int main(int argc, char** argv) {
 
     USE_POS = conf.count("use_pos_tags");
     USE_SPELLING = conf.count("use_spelling"); //Miguel
+
     corpus.USE_SPELLING = USE_SPELLING;
+    corpus.USE_LOWERWV = conf.count("use_lowerwv");
 
     LAYERS = conf["layers"].as<unsigned>();
     INPUT_DIM = conf["input_dim"].as<unsigned>();
