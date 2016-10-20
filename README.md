@@ -7,6 +7,7 @@ Transition-based joint syntactic dependency parser and semantic role labeler usi
  * [Boost](http://www.boost.org/) libraries
  * [Eigen](http://eigen.tuxfamily.org) (newer versions strongly recommended)
  * [CMake](http://www.cmake.org/)
+ * This runs with the older version of cnn/dynet : `cnn-v1`
 
 #### Checking out the project for the first time
 
