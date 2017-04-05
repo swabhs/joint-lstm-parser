@@ -56,12 +56,13 @@ The parser will output a file test.predictions.conll with predicted syntax and S
 
 If you make use of this software, please cite the following:
 
-@inproceedings{swayamdipta:2016conll,
-author={Swabha Swayamdipta and Miguel Ballesteros and Chris Dyer and Noah A. Smith},
-title={Greedy, Joint Syntactic-Semantic Parsing with Stack LSTMs},
-booktitle={Proc. of CoNLL},
-year={2016}
-}
+    @inproceedings{swayamdipta:2016conll,
+    author={Swabha Swayamdipta and Miguel Ballesteros and Chris Dyer and Noah A. Smith},
+    title={Greedy, Joint Syntactic-Semantic Parsing with Stack LSTMs},
+    booktitle={Proc. of CoNLL},
+    year={2016}
+    }
+
 #### Contact
 
 For questions and usage issues, please contact swabha@cs.cmu.edu
